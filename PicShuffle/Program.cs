@@ -8,10 +8,17 @@ namespace PicShuffle
 {
     internal class Program
     {
-        static int XorshiftX = 26;
-        static int XorshiftY = 15;
-        static int XorshiftZ = 17;
-        static uint Seed = 233333;
+        const int DeafultXorshiftX = 12;
+        const int DeafultXorshiftY = 25;
+        const int DeafultXorshiftZ = 27;
+        const ulong DeafultXorshiftStarMultiplier = 0x2545F4914F6CDD1D;
+        const int DeafultSeed = 233333;
+
+        static int XorshiftX = DeafultXorshiftX;
+        static int XorshiftY = DeafultXorshiftY;
+        static int XorshiftZ = DeafultXorshiftZ;
+        static ulong XorshiftStarMultiplier = DeafultXorshiftStarMultiplier;
+        static uint Seed = DeafultSeed;
 
         static readonly string[] Help = { "按Esc退出程序", "按H显示帮助", "按I显示参数", "按S设置参数", "按E打乱图片", "按D恢复图片" };
 
@@ -41,16 +48,18 @@ namespace PicShuffle
 
                         case ConsoleKey.I:
                             Console.WriteLine("种子：" + Seed);
-                            Console.WriteLine("Xorshift参数x：" + XorshiftX);
-                            Console.WriteLine("Xorshift参数y：" + XorshiftY);
-                            Console.WriteLine("Xorshift参数z：" + XorshiftZ);
+                            Console.WriteLine("Xorshift 参数x：" + XorshiftX);
+                            Console.WriteLine("Xorshift 参数y：" + XorshiftY);
+                            Console.WriteLine("Xorshift 参数z：" + XorshiftZ);
+                            Console.WriteLine("Xorshift* 乘数（留空使用默认值）：" + XorshiftStarMultiplier);
                             break;
 
                         case ConsoleKey.S:
-                            Seed = (uint)Int32Input("种子（留空使用默认值）：", 114514);
-                            XorshiftX = Int32Input("Xorshift参数x（留空使用默认值）：", 26, 0, 31);
-                            XorshiftY = Int32Input("Xorshift参数y（留空使用默认值）：", 15, 0, 31);
-                            XorshiftZ = Int32Input("Xorshift参数z（留空使用默认值）：", 17, 0, 31);
+                            Seed = (uint)Int32Input("种子（留空使用默认值）：", DeafultSeed);
+                            XorshiftX = Int32Input("Xorshift 参数x（留空使用默认值）：", DeafultXorshiftX, 0, 31);
+                            XorshiftY = Int32Input("Xorshift 参数y（留空使用默认值）：", DeafultXorshiftY, 0, 31);
+                            XorshiftZ = Int32Input("Xorshift 参数z（留空使用默认值）：", DeafultXorshiftZ, 0, 31);
+                            XorshiftStarMultiplier = UInt64Input("Xorshift* 乘数（留空使用默认值）：", DeafultXorshiftStarMultiplier, 0, 31);
                             Seed &= 0x7FFFFFFF;
                             break;
 
@@ -106,9 +115,9 @@ namespace PicShuffle
 
         static int Int32Input(object prompt, int @default = 0, int min = 0, int max = int.MaxValue)
         {
-            Console.Write(prompt);
             while (true)
             {
+                Console.Write(prompt);
                 try
                 {
                     string read = Console.ReadLine()?.Trim();
@@ -117,6 +126,29 @@ namespace PicShuffle
                         return @default;
                     }
                     if (int.TryParse(read, out int i) && min <= i && i <= max)
+                    {
+                        return i;
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine($"只接受整数({min}~{max})");
+                }
+            }
+        }
+        static ulong UInt64Input(object prompt, ulong @default = 0, ulong min = 0, ulong max = ulong.MaxValue)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                try
+                {
+                    string read = Console.ReadLine()?.Trim();
+                    if (string.IsNullOrEmpty(read))
+                    {
+                        return @default;
+                    }
+                    if (ulong.TryParse(read, out ulong i) && min <= i && i <= max)
                     {
                         return i;
                     }
@@ -245,7 +277,7 @@ namespace PicShuffle
         {
             for (uint i = (uint)targetList.Length - 1; i > 0; i--)
             {
-                int exchange = Cast(Xorshift(Seed ^ i + 1), i + 1);
+                int exchange = Cast(XorshiftStar(Seed ^ i + 1), i + 1);
                 T temp = targetList[i];
                 targetList[i] = targetList[exchange];
                 targetList[exchange] = temp;
@@ -255,7 +287,7 @@ namespace PicShuffle
         {
             for (uint i = 1; i < targetList.Length; i++)
             {
-                int exchange = Cast(Xorshift(Seed ^ i + 1), i + 1);
+                int exchange = Cast(XorshiftStar(Seed ^ i + 1), i + 1);
                 T temp = targetList[i];
                 targetList[i] = targetList[exchange];
                 targetList[exchange] = temp;
@@ -267,12 +299,13 @@ namespace PicShuffle
         /// </summary>
         /// <param name="seed">种子</param>
         /// <returns></returns>
-        public static uint Xorshift(uint seed)
+        public static uint XorshiftStar(uint seed)
         {
-            seed ^= seed << XorshiftX;
-            seed ^= seed >> XorshiftY;
-            seed ^= seed << XorshiftZ;
-            return seed;
+            ulong x = seed;
+            x ^= x << XorshiftX;
+            x ^= x >> XorshiftY;
+            x ^= x << XorshiftZ;
+            return (uint)((x * XorshiftStarMultiplier) >> 32);
         }
 
         public static int Cast(uint x, uint max) => (int)(x / 4294967295d * max);

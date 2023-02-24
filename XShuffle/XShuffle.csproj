@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>netstandard1.0;netstandard2.0;netstandard2.1;net20;net30;net35;net40;net45;net6.0</TargetFrameworks>
+    <Authors>Myitian</Authors>
+    <PackageProjectUrl>https://github.com/Myitian/XShuffle</PackageProjectUrl>
+    <Title>Myitian.XShuffle</Title>
+    <RepositoryUrl>https://github.com/Myitian/XShuffle</RepositoryUrl>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <RootNamespace>Myitian.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+    <PackageLicenseExpression>Unlicense</PackageLicenseExpression>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+</Project>

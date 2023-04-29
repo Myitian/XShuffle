@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Text;
 
 namespace Myitian.XShuffle
 {
@@ -76,6 +78,12 @@ namespace Myitian.XShuffle
             Shuffle(chars, start, end);
             return new string(chars);
         }
+        public string ShuffleStringElements(string target, int start = 0, int? end = null)
+        {
+            int[] indexes = StringInfo.ParseCombiningCharacters(target);
+            Shuffle(indexes, start, end);
+            return CreateString(indexes, target);
+        }
 
         public void ReversedShuffle<T>(T[] target, int start = 0, int? end = null)
         {
@@ -131,6 +139,12 @@ namespace Myitian.XShuffle
             ReversedShuffle(chars, start, end);
             return new string(chars);
         }
+        public string ReversedShuffleStringElements(string target, int start = 0, int? end = null)
+        {
+            int[] indexes = StringInfo.ParseCombiningCharacters(target);
+            ReversedShuffle(indexes, start, end);
+            return CreateString(indexes, target);
+        }
 
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_0_OR_GREATER
         public void Shuffle<T>(T[] target, Index? start = null, Index? end = null)
@@ -168,6 +182,15 @@ namespace Myitian.XShuffle
             int? iend = end?.GetOffset(l);
             return Shuffle(target, istart, iend);
         }
+        public string ShuffleStringElements(string target, Index? start = null, Index? end = null)
+        {
+            int[] indexes = StringInfo.ParseCombiningCharacters(target);
+            int l = indexes.Length;
+            int istart = start?.GetOffset(l) ?? 0;
+            int? iend = end?.GetOffset(l);
+            Shuffle(indexes, istart, iend);
+            return CreateString(indexes, target);
+        }
 
         public void ReversedShuffle<T>(T[] target, Index? start = null, Index? end = null)
         {
@@ -204,6 +227,15 @@ namespace Myitian.XShuffle
             int? iend = end?.GetOffset(l);
             return ReversedShuffle(target, istart, iend);
         }
+        public string ReversedShuffleStringElements(string target, Index? start = null, Index? end = null)
+        {
+            int[] indexes = StringInfo.ParseCombiningCharacters(target);
+            int l = indexes.Length;
+            int istart = start?.GetOffset(l) ?? 0;
+            int? iend = end?.GetOffset(l);
+            ReversedShuffle(indexes, istart, iend);
+            return CreateString(indexes, target);
+        }
 
         public void Shuffle<T>(T[] target, Range? range = null)
             => Shuffle(target, range?.Start, range?.End);
@@ -215,6 +247,8 @@ namespace Myitian.XShuffle
             => Shuffle(target, range?.Start, range?.End);
         public string Shuffle(string target, Range? range = null)
             => Shuffle(target, range?.Start, range?.End);
+        public string ShuffleStringElements(string target, Range? range = null)
+            => ShuffleStringElements(target, range?.Start, range?.End);
 
         public void ReversedShuffle<T>(T[] target, Range? range = null)
             => ReversedShuffle(target, range?.Start, range?.End);
@@ -226,6 +260,8 @@ namespace Myitian.XShuffle
             => ReversedShuffle(target, range?.Start, range?.End);
         public string ReversedShuffle(string target, Range? range = null)
             => ReversedShuffle(target, range?.Start, range?.End);
+        public string ReversedShuffleStringElements(string target, Range? range = null)
+            => ReversedShuffleStringElements(target, range?.Start, range?.End);
 #endif
 
         public uint XorshiftStar(uint seed)
@@ -237,6 +273,15 @@ namespace Myitian.XShuffle
             return (uint)((x * XorshiftStarMultiplier) >> 32);
         }
 
+        string CreateString(int[] ints, string s)
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < ints.Length; i++)
+            {
+                sb.Append(StringInfo.GetNextTextElement(s, ints[i]));
+            }
+            return sb.ToString();
+        }
         public static int EndIndexConvert(int? end, int len)
             => end is null ? len : ExpandIndexConvert(end.Value, len);
 
@@ -295,7 +340,7 @@ namespace Myitian.XShuffle
             int e = EndIndexConvert(end, l);
             int i = ExpandIndexConvert(start, l) + 1;
             uint u = (uint)i;
-            while (i <= e)
+            while (i < e)
             {
                 int exchange = Cast(XorshiftStar(Seed ^ u + 1), ++u);
                 Swap(target, i++, exchange);

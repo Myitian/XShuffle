@@ -83,7 +83,7 @@ namespace Myitian.XShuffle
             int e = EndIndexConvert(end, l);
             int i = ExpandIndexConvert(start, l) + 1;
             uint u = (uint)i;
-            while (i <= e)
+            while (i < e)
             {
                 int exchange = Cast(XorshiftStar(Seed ^ u + 1), ++u);
                 Swap(target, i++, exchange);
@@ -95,7 +95,7 @@ namespace Myitian.XShuffle
             int e = EndIndexConvert(end, l);
             int i = ExpandIndexConvert(start, l) + 1;
             uint u = (uint)i;
-            while (i <= e)
+            while (i < e)
             {
                 int exchange = Cast(XorshiftStar(Seed ^ u + 1), ++u);
                 Swap(target, i++, exchange);
@@ -107,7 +107,7 @@ namespace Myitian.XShuffle
             int e = EndIndexConvert(end, l);
             int i = ExpandIndexConvert(start, l) + 1;
             uint u = (uint)i;
-            while (i <= e)
+            while (i < e)
             {
                 int exchange = Cast(XorshiftStar(Seed ^ u + 1), ++u);
                 Swap(target, i++, exchange);
@@ -119,7 +119,7 @@ namespace Myitian.XShuffle
             int e = EndIndexConvert(end, l);
             int i = ExpandIndexConvert(start, l) + 1;
             uint u = (uint)i;
-            while (i <= e)
+            while (i < e)
             {
                 int exchange = Cast(XorshiftStar(Seed ^ u + 1), ++u);
                 Swap(target, i++, exchange);
@@ -131,6 +131,7 @@ namespace Myitian.XShuffle
             ReversedShuffle(chars, start, end);
             return new string(chars);
         }
+
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_0_OR_GREATER
         public void Shuffle<T>(T[] target, Index? start = null, Index? end = null)
         {
@@ -356,5 +357,17 @@ namespace Myitian.XShuffle
             XorshiftStarMultiplier = m;
             Seed = seed;
         }
+
+        public override bool Equals(object obj)
+            => obj is XShuffle xs
+                && Seed == xs.Seed
+                && XorshiftX == xs.XorshiftX
+                && XorshiftY == xs.XorshiftY
+                && XorshiftZ == xs.XorshiftZ
+                && XorshiftStarMultiplier == xs.XorshiftStarMultiplier;
+        public override int GetHashCode()
+            => (int)Seed ^ XorshiftX ^ XorshiftY ^ XorshiftZ ^ XorshiftStarMultiplier.GetHashCode();
+        public override string ToString()
+            => $"XShuffle seed:{Seed} args:x{XorshiftX}y{XorshiftY}z{XorshiftZ}m{XorshiftStarMultiplier}";
     }
 }

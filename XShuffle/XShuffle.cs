@@ -413,6 +413,6 @@ namespace Myitian.XShuffle
         public override int GetHashCode()
             => (int)Seed ^ XorshiftX ^ XorshiftY ^ XorshiftZ ^ XorshiftStarMultiplier.GetHashCode();
         public override string ToString()
-            => $"XShuffle seed:{Seed} args:x{XorshiftX}y{XorshiftY}z{XorshiftZ}m{XorshiftStarMultiplier}";
+            => $"[Myitian.XShuffle.XShuffle@seed:{Seed}+args:x{XorshiftX}y{XorshiftY}z{XorshiftZ}m{XorshiftStarMultiplier}]";
     }
 }

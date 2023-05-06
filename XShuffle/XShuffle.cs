@@ -72,6 +72,19 @@ namespace Myitian.XShuffle
                 u--;
             }
         }
+        public void Shuffle(IShuffleable target, int start = 0, int? end = null)
+        {
+            int l = target.Length;
+            int i = EndIndexConvert(end, l) - 1;
+            start = ExpandIndexConvert(start, l);
+            uint u = (uint)i;
+            while (i > start)
+            {
+                int exchange = Cast(XorshiftStar(Seed ^ u + 1), u + 1);
+                target.Swap(i--, exchange);
+                u--;
+            }
+        }
         public string Shuffle(string target, int start = 0, int? end = null)
         {
             char[] chars = target.ToCharArray();
@@ -133,6 +146,18 @@ namespace Myitian.XShuffle
                 Swap(target, i++, exchange);
             }
         }
+        public void ReversedShuffle(IShuffleable target, int start = 0, int? end = null)
+        {
+            int l = target.Length;
+            int e = EndIndexConvert(end, l);
+            int i = ExpandIndexConvert(start, l) + 1;
+            uint u = (uint)i;
+            while (i < e)
+            {
+                int exchange = Cast(XorshiftStar(Seed ^ u + 1), ++u);
+                target.Swap(i++, exchange);
+            }
+        }
         public string ReversedShuffle(string target, int start = 0, int? end = null)
         {
             char[] chars = target.ToCharArray();
@@ -169,6 +194,13 @@ namespace Myitian.XShuffle
             Shuffle(target, istart, iend);
         }
         public void Shuffle(BitArray target, Index? start = null, Index? end = null)
+        {
+            int l = target.Length;
+            int istart = start?.GetOffset(l) ?? 0;
+            int? iend = end?.GetOffset(l);
+            Shuffle(target, istart, iend);
+        }
+        public void Shuffle(IShuffleable target, Index? start = null, Index? end = null)
         {
             int l = target.Length;
             int istart = start?.GetOffset(l) ?? 0;
@@ -220,6 +252,13 @@ namespace Myitian.XShuffle
             int? iend = end?.GetOffset(l);
             ReversedShuffle(target, istart, iend);
         }
+        public void ReversedShuffle(IShuffleable target, Index? start = null, Index? end = null)
+        {
+            int l = target.Length;
+            int istart = start?.GetOffset(l) ?? 0;
+            int? iend = end?.GetOffset(l);
+            ReversedShuffle(target, istart, iend);
+        }
         public string ReversedShuffle(string target, Index? start = null, Index? end = null)
         {
             int l = target.Length;
@@ -245,6 +284,8 @@ namespace Myitian.XShuffle
             => Shuffle(target, range?.Start, range?.End);
         public void Shuffle(BitArray target, Range? range = null)
             => Shuffle(target, range?.Start, range?.End);
+        public void Shuffle(IShuffleable target, Range? range = null)
+            => Shuffle(target, range?.Start, range?.End);
         public string Shuffle(string target, Range? range = null)
             => Shuffle(target, range?.Start, range?.End);
         public string ShuffleStringElements(string target, Range? range = null)
@@ -257,6 +298,8 @@ namespace Myitian.XShuffle
         public void ReversedShuffle(IList target, Range? range = null)
             => ReversedShuffle(target, range?.Start, range?.End);
         public void ReversedShuffle(BitArray target, Range? range = null)
+            => ReversedShuffle(target, range?.Start, range?.End);
+        public void ReversedShuffle(IShuffleable target, Range? range = null)
             => ReversedShuffle(target, range?.Start, range?.End);
         public string ReversedShuffle(string target, Range? range = null)
             => ReversedShuffle(target, range?.Start, range?.End);

@@ -20,291 +20,301 @@ namespace Myitian.XShuffle
         public ulong XorshiftStarMultiplier;
         public uint Seed;
 
-        public void Shuffle<T>(T[] target, int start = 0, int? end = null)
+        public void Shuffle<T>(T[] target, int start = 0, int? end = null, uint? seed = null)
         {
             int l = target.Length;
             int i = EndIndexConvert(end, l) - 1;
             start = ExpandIndexConvert(start, l);
             uint u = (uint)i;
+            uint s = seed ?? Seed;
             while (i > start)
             {
-                int exchange = Cast(XorshiftStar(Seed ^ u + 1), u + 1);
+                int exchange = Cast(XorshiftStar(s ^ u + 1), u + 1);
                 Swap(target, i--, exchange);
                 u--;
             }
         }
-        public void Shuffle<T>(IList<T> target, int start = 0, int? end = null)
+        public void Shuffle<T>(IList<T> target, int start = 0, int? end = null, uint? seed = null)
         {
             int l = target.Count;
             int i = EndIndexConvert(end, l) - 1;
             start = ExpandIndexConvert(start, l);
             uint u = (uint)i;
+            uint s = seed ?? Seed;
             while (i > start)
             {
-                int exchange = Cast(XorshiftStar(Seed ^ u + 1), u + 1);
+                int exchange = Cast(XorshiftStar(s ^ u + 1), u + 1);
                 Swap(target, i--, exchange);
                 u--;
             }
         }
-        public void Shuffle(IList target, int start = 0, int? end = null)
+        public void Shuffle(IList target, int start = 0, int? end = null, uint? seed = null)
         {
             int l = target.Count;
             int i = EndIndexConvert(end, l) - 1;
             start = ExpandIndexConvert(start, l);
             uint u = (uint)i;
+            uint s = seed ?? Seed;
             while (i > start)
             {
-                int exchange = Cast(XorshiftStar(Seed ^ u + 1), u + 1);
+                int exchange = Cast(XorshiftStar(s ^ u + 1), u + 1);
                 Swap(target, i--, exchange);
                 u--;
             }
         }
-        public void Shuffle(BitArray target, int start = 0, int? end = null)
+        public void Shuffle(BitArray target, int start = 0, int? end = null, uint? seed = null)
         {
             int l = target.Length;
             int i = EndIndexConvert(end, l) - 1;
             start = ExpandIndexConvert(start, l);
             uint u = (uint)i;
+            uint s = seed ?? Seed;
             while (i > start)
             {
-                int exchange = Cast(XorshiftStar(Seed ^ u + 1), u + 1);
+                int exchange = Cast(XorshiftStar(s ^ u + 1), u + 1);
                 Swap(target, i--, exchange);
                 u--;
             }
         }
-        public void Shuffle(IShuffleable target, int start = 0, int? end = null)
+        public void Shuffle(IShuffleable target, int start = 0, int? end = null, uint? seed = null)
         {
             int l = target.Length;
             int i = EndIndexConvert(end, l) - 1;
             start = ExpandIndexConvert(start, l);
             uint u = (uint)i;
+            uint s = seed ?? Seed;
             while (i > start)
             {
-                int exchange = Cast(XorshiftStar(Seed ^ u + 1), u + 1);
+                int exchange = Cast(XorshiftStar(s ^ u + 1), u + 1);
                 target.Swap(i--, exchange);
                 u--;
             }
         }
-        public string Shuffle(string target, int start = 0, int? end = null)
+        public string Shuffle(string target, int start = 0, int? end = null, uint? seed = null)
         {
             char[] chars = target.ToCharArray();
-            Shuffle(chars, start, end);
+            Shuffle(chars, start, end, seed);
             return new string(chars);
         }
-        public string ShuffleStringElements(string target, int start = 0, int? end = null)
+        public string ShuffleStringElements(string target, int start = 0, int? end = null, uint? seed = null)
         {
             int[] indexes = StringInfo.ParseCombiningCharacters(target);
-            Shuffle(indexes, start, end);
+            Shuffle(indexes, start, end, seed);
             return CreateString(indexes, target);
         }
 
-        public void ReversedShuffle<T>(T[] target, int start = 0, int? end = null)
+        public void ReversedShuffle<T>(T[] target, int start = 0, int? end = null, uint? seed = null)
         {
             int l = target.Length;
             int e = EndIndexConvert(end, l);
             int i = ExpandIndexConvert(start, l) + 1;
             uint u = (uint)i;
+            uint s = seed ?? Seed;
             while (i < e)
             {
-                int exchange = Cast(XorshiftStar(Seed ^ u + 1), ++u);
+                int exchange = Cast(XorshiftStar(s ^ u + 1), ++u);
                 Swap(target, i++, exchange);
             }
         }
-        public void ReversedShuffle<T>(IList<T> target, int start = 0, int? end = null)
+        public void ReversedShuffle<T>(IList<T> target, int start = 0, int? end = null, uint? seed = null)
         {
             int l = target.Count;
             int e = EndIndexConvert(end, l);
             int i = ExpandIndexConvert(start, l) + 1;
             uint u = (uint)i;
+            uint s = seed ?? Seed;
             while (i < e)
             {
-                int exchange = Cast(XorshiftStar(Seed ^ u + 1), ++u);
+                int exchange = Cast(XorshiftStar(s ^ u + 1), ++u);
                 Swap(target, i++, exchange);
             }
         }
-        public void ReversedShuffle(IList target, int start = 0, int? end = null)
+        public void ReversedShuffle(IList target, int start = 0, int? end = null, uint? seed = null)
         {
             int l = target.Count;
             int e = EndIndexConvert(end, l);
             int i = ExpandIndexConvert(start, l) + 1;
             uint u = (uint)i;
+            uint s = seed ?? Seed;
             while (i < e)
             {
-                int exchange = Cast(XorshiftStar(Seed ^ u + 1), ++u);
+                int exchange = Cast(XorshiftStar(s ^ u + 1), ++u);
                 Swap(target, i++, exchange);
             }
         }
-        public void ReversedShuffle(BitArray target, int start = 0, int? end = null)
+        public void ReversedShuffle(BitArray target, int start = 0, int? end = null, uint? seed = null)
         {
             int l = target.Length;
             int e = EndIndexConvert(end, l);
             int i = ExpandIndexConvert(start, l) + 1;
             uint u = (uint)i;
+            uint s = seed ?? Seed;
             while (i < e)
             {
-                int exchange = Cast(XorshiftStar(Seed ^ u + 1), ++u);
+                int exchange = Cast(XorshiftStar(s ^ u + 1), ++u);
                 Swap(target, i++, exchange);
             }
         }
-        public void ReversedShuffle(IShuffleable target, int start = 0, int? end = null)
+        public void ReversedShuffle(IShuffleable target, int start = 0, int? end = null, uint? seed = null)
         {
             int l = target.Length;
             int e = EndIndexConvert(end, l);
             int i = ExpandIndexConvert(start, l) + 1;
             uint u = (uint)i;
+            uint s = seed ?? Seed;
             while (i < e)
             {
-                int exchange = Cast(XorshiftStar(Seed ^ u + 1), ++u);
+                int exchange = Cast(XorshiftStar(s ^ u + 1), ++u);
                 target.Swap(i++, exchange);
             }
         }
-        public string ReversedShuffle(string target, int start = 0, int? end = null)
+        public string ReversedShuffle(string target, int start = 0, int? end = null, uint? seed = null)
         {
             char[] chars = target.ToCharArray();
-            ReversedShuffle(chars, start, end);
+            ReversedShuffle(chars, start, end, seed);
             return new string(chars);
         }
-        public string ReversedShuffleStringElements(string target, int start = 0, int? end = null)
+        public string ReversedShuffleStringElements(string target, int start = 0, int? end = null, uint? seed = null)
         {
             int[] indexes = StringInfo.ParseCombiningCharacters(target);
-            ReversedShuffle(indexes, start, end);
+            ReversedShuffle(indexes, start, end, seed);
             return CreateString(indexes, target);
         }
 
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_0_OR_GREATER
-        public void Shuffle<T>(T[] target, Index? start = null, Index? end = null)
+        public void Shuffle<T>(T[] target, Index? start = null, Index? end = null, uint? seed = null)
         {
             int l = target.Length;
             int istart = start?.GetOffset(l) ?? 0;
             int? iend = end?.GetOffset(l);
-            Shuffle(target, istart, iend);
+            Shuffle(target, istart, iend, seed);
         }
-        public void Shuffle<T>(IList<T> target, Index? start = null, Index? end = null)
+        public void Shuffle<T>(IList<T> target, Index? start = null, Index? end = null, uint? seed = null)
         {
             int l = target.Count;
             int istart = start?.GetOffset(l) ?? 0;
             int? iend = end?.GetOffset(l);
-            Shuffle(target, istart, iend);
+            Shuffle(target, istart, iend, seed);
         }
-        public void Shuffle(IList target, Index? start = null, Index? end = null)
+        public void Shuffle(IList target, Index? start = null, Index? end = null, uint? seed = null)
         {
             int l = target.Count;
             int istart = start?.GetOffset(l) ?? 0;
             int? iend = end?.GetOffset(l);
-            Shuffle(target, istart, iend);
+            Shuffle(target, istart, iend, seed);
         }
-        public void Shuffle(BitArray target, Index? start = null, Index? end = null)
+        public void Shuffle(BitArray target, Index? start = null, Index? end = null, uint? seed = null)
         {
             int l = target.Length;
             int istart = start?.GetOffset(l) ?? 0;
             int? iend = end?.GetOffset(l);
-            Shuffle(target, istart, iend);
+            Shuffle(target, istart, iend, seed);
         }
-        public void Shuffle(IShuffleable target, Index? start = null, Index? end = null)
+        public void Shuffle(IShuffleable target, Index? start = null, Index? end = null, uint? seed = null)
         {
             int l = target.Length;
             int istart = start?.GetOffset(l) ?? 0;
             int? iend = end?.GetOffset(l);
-            Shuffle(target, istart, iend);
+            Shuffle(target, istart, iend, seed);
         }
-        public string Shuffle(string target, Index? start = null, Index? end = null)
+        public string Shuffle(string target, Index? start = null, Index? end = null, uint? seed = null)
         {
             int l = target.Length;
             int istart = start?.GetOffset(l) ?? 0;
             int? iend = end?.GetOffset(l);
-            return Shuffle(target, istart, iend);
+            return Shuffle(target, istart, iend, seed);
         }
-        public string ShuffleStringElements(string target, Index? start = null, Index? end = null)
+        public string ShuffleStringElements(string target, Index? start = null, Index? end = null, uint? seed = null)
         {
             int[] indexes = StringInfo.ParseCombiningCharacters(target);
             int l = indexes.Length;
             int istart = start?.GetOffset(l) ?? 0;
             int? iend = end?.GetOffset(l);
-            Shuffle(indexes, istart, iend);
+            Shuffle(indexes, istart, iend, seed);
             return CreateString(indexes, target);
         }
 
-        public void ReversedShuffle<T>(T[] target, Index? start = null, Index? end = null)
+        public void ReversedShuffle<T>(T[] target, Index? start = null, Index? end = null, uint? seed = null)
         {
             int l = target.Length;
             int istart = start?.GetOffset(l) ?? 0;
             int? iend = end?.GetOffset(l);
-            ReversedShuffle(target, istart, iend);
+            ReversedShuffle(target, istart, iend, seed);
         }
-        public void ReversedShuffle<T>(IList<T> target, Index? start = null, Index? end = null)
+        public void ReversedShuffle<T>(IList<T> target, Index? start = null, Index? end = null, uint? seed = null)
         {
             int l = target.Count;
             int istart = start?.GetOffset(l) ?? 0;
             int? iend = end?.GetOffset(l);
-            ReversedShuffle(target, istart, iend);
+            ReversedShuffle(target, istart, iend, seed);
         }
-        public void ReversedShuffle(IList target, Index? start = null, Index? end = null)
+        public void ReversedShuffle(IList target, Index? start = null, Index? end = null, uint? seed = null)
         {
             int l = target.Count;
             int istart = start?.GetOffset(l) ?? 0;
             int? iend = end?.GetOffset(l);
-            ReversedShuffle(target, istart, iend);
+            ReversedShuffle(target, istart, iend, seed);
         }
-        public void ReversedShuffle(BitArray target, Index? start = null, Index? end = null)
+        public void ReversedShuffle(BitArray target, Index? start = null, Index? end = null, uint? seed = null)
         {
             int l = target.Length;
             int istart = start?.GetOffset(l) ?? 0;
             int? iend = end?.GetOffset(l);
-            ReversedShuffle(target, istart, iend);
+            ReversedShuffle(target, istart, iend, seed);
         }
-        public void ReversedShuffle(IShuffleable target, Index? start = null, Index? end = null)
+        public void ReversedShuffle(IShuffleable target, Index? start = null, Index? end = null, uint? seed = null)
         {
             int l = target.Length;
             int istart = start?.GetOffset(l) ?? 0;
             int? iend = end?.GetOffset(l);
-            ReversedShuffle(target, istart, iend);
+            ReversedShuffle(target, istart, iend, seed);
         }
-        public string ReversedShuffle(string target, Index? start = null, Index? end = null)
+        public string ReversedShuffle(string target, Index? start = null, Index? end = null, uint? seed = null)
         {
             int l = target.Length;
             int istart = start?.GetOffset(l) ?? 0;
             int? iend = end?.GetOffset(l);
-            return ReversedShuffle(target, istart, iend);
+            return ReversedShuffle(target, istart, iend, seed);
         }
-        public string ReversedShuffleStringElements(string target, Index? start = null, Index? end = null)
+        public string ReversedShuffleStringElements(string target, Index? start = null, Index? end = null, uint? seed = null)
         {
             int[] indexes = StringInfo.ParseCombiningCharacters(target);
             int l = indexes.Length;
             int istart = start?.GetOffset(l) ?? 0;
             int? iend = end?.GetOffset(l);
-            ReversedShuffle(indexes, istart, iend);
+            ReversedShuffle(indexes, istart, iend, seed);
             return CreateString(indexes, target);
         }
 
-        public void Shuffle<T>(T[] target, Range? range = null)
-            => Shuffle(target, range?.Start, range?.End);
-        public void Shuffle<T>(IList<T> target, Range? range = null)
-            => Shuffle(target, range?.Start, range?.End);
-        public void Shuffle(IList target, Range? range = null)
-            => Shuffle(target, range?.Start, range?.End);
-        public void Shuffle(BitArray target, Range? range = null)
-            => Shuffle(target, range?.Start, range?.End);
-        public void Shuffle(IShuffleable target, Range? range = null)
-            => Shuffle(target, range?.Start, range?.End);
-        public string Shuffle(string target, Range? range = null)
-            => Shuffle(target, range?.Start, range?.End);
-        public string ShuffleStringElements(string target, Range? range = null)
-            => ShuffleStringElements(target, range?.Start, range?.End);
+        public void Shuffle<T>(T[] target, Range? range = null, uint? seed = null)
+            => Shuffle(target, range?.Start, range?.End, seed);
+        public void Shuffle<T>(IList<T> target, Range? range = null, uint? seed = null)
+            => Shuffle(target, range?.Start, range?.End, seed);
+        public void Shuffle(IList target, Range? range = null, uint? seed = null)
+            => Shuffle(target, range?.Start, range?.End, seed);
+        public void Shuffle(BitArray target, Range? range = null, uint? seed = null)
+            => Shuffle(target, range?.Start, range?.End, seed);
+        public void Shuffle(IShuffleable target, Range? range = null, uint? seed = null)
+            => Shuffle(target, range?.Start, range?.End, seed);
+        public string Shuffle(string target, Range? range = null, uint? seed = null)
+            => Shuffle(target, range?.Start, range?.End, seed);
+        public string ShuffleStringElements(string target, Range? range = null, uint? seed = null)
+            => ShuffleStringElements(target, range?.Start, range?.End, seed);
 
-        public void ReversedShuffle<T>(T[] target, Range? range = null)
-            => ReversedShuffle(target, range?.Start, range?.End);
-        public void ReversedShuffle<T>(IList<T> target, Range? range = null)
-            => ReversedShuffle(target, range?.Start, range?.End);
-        public void ReversedShuffle(IList target, Range? range = null)
-            => ReversedShuffle(target, range?.Start, range?.End);
-        public void ReversedShuffle(BitArray target, Range? range = null)
-            => ReversedShuffle(target, range?.Start, range?.End);
-        public void ReversedShuffle(IShuffleable target, Range? range = null)
-            => ReversedShuffle(target, range?.Start, range?.End);
-        public string ReversedShuffle(string target, Range? range = null)
-            => ReversedShuffle(target, range?.Start, range?.End);
-        public string ReversedShuffleStringElements(string target, Range? range = null)
-            => ReversedShuffleStringElements(target, range?.Start, range?.End);
+        public void ReversedShuffle<T>(T[] target, Range? range = null, uint? seed = null)
+            => ReversedShuffle(target, range?.Start, range?.End, seed);
+        public void ReversedShuffle<T>(IList<T> target, Range? range = null, uint? seed = null)
+            => ReversedShuffle(target, range?.Start, range?.End, seed);
+        public void ReversedShuffle(IList target, Range? range = null, uint? seed = null)
+            => ReversedShuffle(target, range?.Start, range?.End, seed);
+        public void ReversedShuffle(BitArray target, Range? range = null, uint? seed = null)
+            => ReversedShuffle(target, range?.Start, range?.End, seed);
+        public void ReversedShuffle(IShuffleable target, Range? range = null, uint? seed = null)
+            => ReversedShuffle(target, range?.Start, range?.End, seed);
+        public string ReversedShuffle(string target, Range? range = null, uint? seed = null)
+            => ReversedShuffle(target, range?.Start, range?.End, seed);
+        public string ReversedShuffleStringElements(string target, Range? range = null, uint? seed = null)
+            => ReversedShuffleStringElements(target, range?.Start, range?.End, seed);
 #endif
 
         public uint XorshiftStar(uint seed)

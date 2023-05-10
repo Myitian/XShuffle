@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
-namespace Myitian.XShuffle
+namespace Myitian.Shuffling
 {
     public class XShuffle
     {
@@ -19,6 +19,22 @@ namespace Myitian.XShuffle
         public int XorshiftZ;
         public ulong XorshiftStarMultiplier;
         public uint Seed;
+
+        public void Shuffle<T>(T[] target)
+            => Shuffle(target, 0, null, null);
+        public void Shuffle<T>(IList<T> target)
+            => Shuffle(target, 0, null, null);
+        public void Shuffle(IList target)
+            => Shuffle(target, 0, null, null);
+        public void Shuffle(BitArray target)
+            => Shuffle(target, 0, null, null);
+        public void Shuffle(IShuffleable target)
+            => Shuffle(target, 0, null, null);
+        public void Shuffle(string target)
+            => Shuffle(target, 0, null, null);
+        public string ShuffleStringElements(string target)
+            => ShuffleStringElements(target, 0, null, null);
+
 
         public void Shuffle<T>(T[] target, int start = 0, int? end = null, uint? seed = null)
         {
@@ -326,7 +342,7 @@ namespace Myitian.XShuffle
             return (uint)((x * XorshiftStarMultiplier) >> 32);
         }
 
-        string CreateString(int[] ints, string s)
+        static string CreateString(int[] ints, string s)
         {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < ints.Length; i++)
@@ -374,51 +390,54 @@ namespace Myitian.XShuffle
             seq[index1] = temp;
         }
 
-        public void Shuffle<T>(Span<T> target, int start = 0, int? end = null)
+        public void Shuffle<T>(Span<T> target) => Shuffle(target, 0, null, null);
+        public void Shuffle<T>(Span<T> target, int start = 0, int? end = null, uint? seed = null)
         {
             int l = target.Length;
             int i = EndIndexConvert(end, l) - 1;
             start = ExpandIndexConvert(start, l);
             uint u = (uint)i;
+            uint s = seed ?? Seed;
             while (i > start)
             {
-                int exchange = Cast(XorshiftStar(Seed ^ u + 1), u + 1);
+                int exchange = Cast(XorshiftStar(s ^ u + 1), u + 1);
                 Swap(target, i--, exchange);
                 u--;
             }
         }
-        public void ReversedShuffle<T>(Span<T> target, int start = 0, int? end = null)
+        public void ReversedShuffle<T>(Span<T> target, int start = 0, int? end = null, uint? seed = null)
         {
             int l = target.Length;
             int e = EndIndexConvert(end, l);
             int i = ExpandIndexConvert(start, l) + 1;
             uint u = (uint)i;
+            uint s = seed ?? Seed;
             while (i < e)
             {
-                int exchange = Cast(XorshiftStar(Seed ^ u + 1), ++u);
+                int exchange = Cast(XorshiftStar(s ^ u + 1), ++u);
                 Swap(target, i++, exchange);
             }
         }
 #endif
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_0_OR_GREATER
-        public void Shuffle<T>(Span<T> target, Index? start = null, Index? end = null)
+        public void Shuffle<T>(Span<T> target, Index? start = null, Index? end = null, uint? seed = null)
         {
             int l = target.Length;
             int istart = start?.GetOffset(l) ?? 0;
             int? iend = end?.GetOffset(l);
-            Shuffle(target, istart, iend);
+            Shuffle(target, istart, iend, seed);
         }
-        public void ReversedShuffle<T>(Span<T> target, Index? start = null, Index? end = null)
+        public void ReversedShuffle<T>(Span<T> target, Index? start = null, Index? end = null, uint? seed = null)
         {
             int l = target.Length;
             int istart = start?.GetOffset(l) ?? 0;
             int? iend = end?.GetOffset(l);
-            ReversedShuffle(target, istart, iend);
+            ReversedShuffle(target, istart, iend, seed);
         }
-        public void Shuffle<T>(Span<T> target, Range? range = null)
-            => Shuffle(target, range?.Start, range?.End);
-        public void ReversedShuffle<T>(Span<T> target, Range? range = null)
-            => ReversedShuffle(target, range?.Start, range?.End);
+        public void Shuffle<T>(Span<T> target, Range? range = null, uint? seed = null)
+            => Shuffle(target, range?.Start, range?.End, seed);
+        public void ReversedShuffle<T>(Span<T> target, Range? range = null, uint? seed = null)
+            => ReversedShuffle(target, range?.Start, range?.End, seed);
 #endif
 
         public static int Cast(uint x, uint max)
@@ -446,7 +465,7 @@ namespace Myitian.XShuffle
             }
             if (m == 0)
             {
-                throw new ArgumentException(nameof(m));
+                throw new ArgumentException("Argument m cannot be zero");
             }
 
             XorshiftX = x;
@@ -466,6 +485,6 @@ namespace Myitian.XShuffle
         public override int GetHashCode()
             => (int)Seed ^ XorshiftX ^ XorshiftY ^ XorshiftZ ^ XorshiftStarMultiplier.GetHashCode();
         public override string ToString()
-            => $"[Myitian.XShuffle.XShuffle@seed:{Seed}+args:x{XorshiftX}y{XorshiftY}z{XorshiftZ}m{XorshiftStarMultiplier}]";
+            => $"[{GetType()}@seed:{Seed}+args:x{XorshiftX}y{XorshiftY}z{XorshiftZ}m{XorshiftStarMultiplier}]";
     }
 }

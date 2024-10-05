@@ -1,8 +1,7 @@
-﻿namespace Myitian.Shuffling
+﻿namespace Myitian.Shuffling;
+
+public interface IShuffleable
 {
-    public interface IShuffleable
-    {
-        int Length { get; }
-        void Swap(int index0, int index1);
-    }
+    int Length { get; }
+    void Swap(int index0, int index1);
 }

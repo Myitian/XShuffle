@@ -8,11 +8,11 @@ namespace Myitian.Shuffling;
 
 public class XShuffle
 {
-    const int DeafultXorshiftX = 12;
-    const int DeafultXorshiftY = 25;
-    const int DeafultXorshiftZ = 27;
-    const ulong DeafultXorshiftStarMultiplier = 0x2545F4914F6CDD1D;
-    const uint DeafultSeed = 233333;
+    public const int DeafultXorshiftX = 12;
+    public const int DeafultXorshiftY = 25;
+    public const int DeafultXorshiftZ = 27;
+    public const ulong DeafultXorshiftStarMultiplier = 0x2545F4914F6CDD1D;
+    public const uint DeafultSeed = 233333;
 
     public int XorshiftX;
     public int XorshiftY;

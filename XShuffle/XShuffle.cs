@@ -46,6 +46,32 @@ public class XShuffle
     public void ShuffleL(ILongShuffleable target)
         => ShuffleL(target, 0, null, null);
 
+    public void ReversedShuffle<T>(T[] target)
+        => ReversedShuffle(target, 0, null, null);
+    public void ReversedShuffle<T>(IList<T> target)
+        => ReversedShuffle(target, 0, null, null);
+    public void ReversedShuffle(IList target)
+        => Shuffle(target, 0, null, null);
+    public void ReversedShuffle(BitArray target)
+        => ReversedShuffle(target, 0, null, null);
+    public void ReversedShuffle(IShuffleable target)
+        => ReversedShuffle(target, 0, null, null);
+    public unsafe void ReversedShuffle<T>(T* target, int length)
+        => ReversedShuffle(target, length, 0, null, null);
+    public void ReversedShuffle(IUnsignedShuffleable target)
+        => ReversedShuffle(target, 0, null, null);
+    public void ReversedShuffle(ILongShuffleable target)
+        => ReversedShuffle(target, 0, null, null);
+    public void ReversedShuffle(string target)
+        => ReversedShuffle(target, 0, null, null);
+    public string ReversedShuffleStringElements(string target)
+        => ReversedShuffleStringElements(target, 0, null, null);
+
+    public unsafe void ReversedShuffleL<T>(T* target, long length)
+        => ReversedShuffleL(target, length, 0, null, null);
+    public void ReversedShuffleL(ILongShuffleable target)
+        => ReversedShuffleL(target, 0, null, null);
+
 
     public void Shuffle<T>(T[] target, int start = 0, int? end = null, uint? seed = null)
     {

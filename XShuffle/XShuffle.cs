@@ -630,7 +630,11 @@ public class XShuffle
         seq[index1] = temp;
     }
 
-    public void Shuffle<T>(Span<T> target) => Shuffle(target, 0, null, null);
+    public void Shuffle<T>(Span<T> target)
+        => Shuffle(target, 0, null, null);
+    public void ReversedShuffle<T>(Span<T> target)
+        => ReversedShuffle(target, 0, null, null);
+
     public void Shuffle<T>(Span<T> target, int start = 0, int? end = null, uint? seed = null)
     {
         int l = target.Length;
